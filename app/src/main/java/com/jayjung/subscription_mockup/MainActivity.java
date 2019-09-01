@@ -2,6 +2,8 @@ package com.jayjung.subscription_mockup;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,10 +14,18 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private NotificationManager notificationManager;
+
+    private RecyclerView recyclerView;
+    private NotiContainerAdapter notiContainerAdapter;
+    private ArrayList<NotiContainer> notiContainerArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +42,32 @@ public class MainActivity extends AppCompatActivity {
                 triggerNotification();
             }
         });
+
+        // RecyclerView Logic for notification card view
+        RecyclerView recyclerView = findViewById(R.id.main_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        notiContainerArrayList = new ArrayList<>();
+        notiContainerAdapter = new NotiContainerAdapter(this, notiContainerArrayList);
+        recyclerView.setAdapter(notiContainerAdapter);
+
+        notiContainerArrayList.add(new NotiContainer("LALALA Title", "LALALA HEHEHE", "Social"));
+        notiContainerArrayList.add(new NotiContainer("정원이 면상", "쟈기 바보", "Love"));
+
+        notiContainerAdapter.notifyDataSetChanged();
+        // Code block below is for notification add card view
+//        String[] channels = new String[] {"Channel 1", "Channel 2", "Test Channel"};
+//
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+//                MainActivity.this,
+//                R.layout.dropdown_menu_item,
+//                channels);
+
+//        AutoCompleteTextView channelDropDown = findViewById(R.id.channel_dropdown);
+//        channelDropDown.setAdapter(adapter);
+
+
     }
+
 
     public void triggerNotification() {
         PendingIntent snoozeIntent =

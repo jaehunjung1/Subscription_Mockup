@@ -7,15 +7,12 @@ public class NotiContainer {
     public String contentTitle, contentText;
     public String channelName, channelDesc;
 
-    public NotiContainer(Drawable smallI, Drawable largeI,
-                         String title, String text,
-                         String name, String desc) {
-        this.smallIcon = smallI;
-        this.largeIcon = largeI;
+    public NotiContainer(String title, String text, String name) {
+//        this.smallIcon = smallI;
+//        this.largeIcon = largeI;
         this.contentTitle = title;
         this.contentText = text;
         this.channelName = name;
-        this.channelDesc = desc;
     }
 
 }
