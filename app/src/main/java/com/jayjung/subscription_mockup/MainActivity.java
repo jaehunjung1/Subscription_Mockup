@@ -13,20 +13,26 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    boolean beenToEditActivity = false;
+
     private NotificationManager notificationManager;
 
     private RecyclerView recyclerView;
     private NotiContainerAdapter notiContainerAdapter;
     private ArrayList<NotiContainer> notiContainerArrayList;
 
+    private FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,30 +50,56 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // RecyclerView Logic for notification card view
-        RecyclerView recyclerView = findViewById(R.id.main_recycler_view);
+        recyclerView = findViewById(R.id.main_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         notiContainerArrayList = new ArrayList<>();
         notiContainerAdapter = new NotiContainerAdapter(this, notiContainerArrayList);
         recyclerView.setAdapter(notiContainerAdapter);
 
         notiContainerArrayList.add(new NotiContainer("LALALA Title", "LALALA HEHEHE", "Social"));
-        notiContainerArrayList.add(new NotiContainer("정원이 면상", "쟈기 바보", "Love"));
+        notiContainerArrayList.add(new NotiContainer("LALALA Title 2", "LALALA HEHEHE 2", "Ad"));
 
         notiContainerAdapter.notifyDataSetChanged();
-        // Code block below is for notification add card view
-//        String[] channels = new String[] {"Channel 1", "Channel 2", "Test Channel"};
-//
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-//                MainActivity.this,
-//                R.layout.dropdown_menu_item,
-//                channels);
 
-//        AutoCompleteTextView channelDropDown = findViewById(R.id.channel_dropdown);
-//        channelDropDown.setAdapter(adapter);
-
-
+        fab = findViewById(R.id.main_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                beenToEditActivity = true;
+                Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                intent.putExtra("isAdd", true);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivityIfNeeded(intent, 0);
+            }
+        });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (beenToEditActivity) {
+            beenToEditActivity = false;
+            Intent intent = getIntent();
+            boolean isAdd = intent.getBooleanExtra("isAdd", false);
+            Log.e("isAdd", String.valueOf(isAdd));
+            if (isAdd) {
+                String title = intent.getStringExtra("title");
+                String text = intent.getStringExtra("text");
+                String channel = intent.getStringExtra("channel");
+
+                notiContainerArrayList.add(new NotiContainer(title, text, channel));
+                notiContainerAdapter.notifyDataSetChanged();
+            } else {
+                // TODO edit하고 돌아온 경우
+            }
+        }
+    }
+
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
 
     public void triggerNotification() {
         PendingIntent snoozeIntent =
