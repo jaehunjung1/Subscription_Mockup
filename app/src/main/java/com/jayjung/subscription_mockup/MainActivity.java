@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     boolean beenToEditActivity = false;
+    int editPos = -1;
 
     private NotificationManager notificationManager;
 
@@ -81,17 +82,26 @@ public class MainActivity extends AppCompatActivity {
         if (beenToEditActivity) {
             beenToEditActivity = false;
             Intent intent = getIntent();
-            boolean isAdd = intent.getBooleanExtra("isAdd", false);
-            Log.e("isAdd", String.valueOf(isAdd));
-            if (isAdd) {
-                String title = intent.getStringExtra("title");
-                String text = intent.getStringExtra("text");
-                String channel = intent.getStringExtra("channel");
+            if (intent.getBooleanExtra("canceled", false))
+                return;
 
+            boolean isAdd = intent.getBooleanExtra("isAdd", false);
+
+            String title = intent.getStringExtra("title");
+            String text = intent.getStringExtra("text");
+            String channel = intent.getStringExtra("channel");
+
+            if (isAdd) {
                 notiContainerArrayList.add(new NotiContainer(title, text, channel));
                 notiContainerAdapter.notifyDataSetChanged();
             } else {
-                // TODO edit하고 돌아온 경우
+                NotiContainer editTarget = notiContainerArrayList.get(editPos);
+                editTarget.contentTitle = title;
+                editTarget.contentText = text;
+                editTarget.channelName = channel;
+                notiContainerAdapter.notifyDataSetChanged();
+
+                editPos = -1;
             }
         }
     }
@@ -116,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder.setSmallIcon(R.drawable.ic_launcher_foreground);
             String channelName = "Test Noti Channel";
-            String description = "This channel is for test.";
+            String description = "Channel Description";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
             NotificationChannel channel = new NotificationChannel(generateChannelId(), channelName, importance);

@@ -1,6 +1,7 @@
 package com.jayjung.subscription_mockup;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 public class NotiContainerAdapter extends RecyclerView.Adapter<NotiContainerHolder> {
     private Context context;
 
-    private ArrayList<NotiContainer> containerArrayList;
+    ArrayList<NotiContainer> containerArrayList;
 
     public NotiContainerAdapter(Context context, ArrayList<NotiContainer> containers) {
         this.context = context;
@@ -37,7 +38,17 @@ public class NotiContainerAdapter extends RecyclerView.Adapter<NotiContainerHold
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.popup_edit:
-                        // TODO
+                        Intent intent = new Intent(context, EditActivity.class);
+                        intent.putExtra("isAdd", false);
+                        intent.putExtra("title", holder.titleTextView.getText().toString());
+                        intent.putExtra("text", holder.textTextView.getText().toString());
+                        // TODO channel intent로 넣어주기
+                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
+                        MainActivity mainActivity = (MainActivity)context;
+                        mainActivity.editPos = holder.getAdapterPosition();
+                        mainActivity.beenToEditActivity = true;
+                        mainActivity.startActivityIfNeeded(intent, 0);
                         return true;
                     case R.id.popup_delete:
                         int pos = holder.getAdapterPosition();

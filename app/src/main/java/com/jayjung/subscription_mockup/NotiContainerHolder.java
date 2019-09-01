@@ -9,7 +9,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 
 public class NotiContainerHolder extends RecyclerView.ViewHolder {
-    private MaterialTextView titleTextView, textTextView, channelNameTextView;
+    MaterialTextView titleTextView, textTextView, channelNameTextView;
     MaterialButton containerMenu;
 
     public NotiContainerHolder(@NonNull View itemView) {
@@ -24,7 +24,6 @@ public class NotiContainerHolder extends RecyclerView.ViewHolder {
     public void setContainerInfo(NotiContainer container) {
         titleTextView.setText(container.contentTitle);
         textTextView.setText(container.contentText);
-        channelNameTextView.setText(String.format("in Channel %s", container.channelName));
-
+        channelNameTextView.setText(String.format("Group %s", container.channelName));
     }
 }

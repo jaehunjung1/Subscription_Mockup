@@ -48,10 +48,10 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="bottom"
                 android:paddingTop="9dp"
                 app:icon="@drawable/ic_more_vert"
-                app:iconGravity="start" />
+                app:iconGravity="start"
+                app:rippleColor="@null" />
 
 
         </LinearLayout>

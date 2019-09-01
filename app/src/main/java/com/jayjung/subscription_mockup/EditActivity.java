@@ -97,7 +97,10 @@ public class EditActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                Intent intent = new Intent(EditActivity.this, MainActivity.class);
+                intent.putExtra("canceled", true);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivityIfNeeded(intent, 0);
             }
         });
     }
@@ -134,7 +137,6 @@ public class EditActivity extends AppCompatActivity {
             // TODO add channel drop down update here
 
             addButton.setText("DONE");
-
         }
     }
 }
