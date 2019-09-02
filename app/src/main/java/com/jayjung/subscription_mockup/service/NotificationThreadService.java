@@ -104,7 +104,6 @@ public class NotificationThreadService extends Service {
             }
 
             manager.notify(NotificationID.getID(), builder.build());
-
         }
     }
 

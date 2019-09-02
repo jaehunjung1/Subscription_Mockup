@@ -30,6 +30,8 @@ public class NotiContainerAdapter extends RecyclerView.Adapter<NotiContainerHold
     public NotiContainerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.card_view_notification, parent, false);
+        final MainActivity mainActivity = (MainActivity)context;
+
         final NotiContainerHolder holder = new NotiContainerHolder(view);
         final PopupMenu menu = new PopupMenu(context, holder.containerMenu);
         menu.getMenuInflater().inflate(R.menu.notification_popup_menu, menu.getMenu());
@@ -45,7 +47,6 @@ public class NotiContainerAdapter extends RecyclerView.Adapter<NotiContainerHold
                         // TODO channel intent로 넣어주기
                         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
-                        MainActivity mainActivity = (MainActivity)context;
                         mainActivity.editPos = holder.getAdapterPosition();
                         mainActivity.beenToEditActivity = true;
                         mainActivity.startActivityIfNeeded(intent, 0);
@@ -55,6 +56,8 @@ public class NotiContainerAdapter extends RecyclerView.Adapter<NotiContainerHold
                         containerArrayList.remove(pos);
                         notifyItemRemoved(pos);
                         notifyItemRangeChanged(pos, containerArrayList.size());
+
+                        mainActivity.checkEmpty();
                         return true;
                 }
                 return true;

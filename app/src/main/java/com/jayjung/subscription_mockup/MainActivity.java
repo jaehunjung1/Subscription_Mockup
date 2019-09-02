@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -26,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<NotiContainer> notiContainerArrayList;
 
     private FloatingActionButton fab;
+
+    MaterialButton emptyButton;
+    TextView emptyText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivityIfNeeded(intent, 0);
             }
         });
+
+        emptyButton = findViewById(R.id.empty_button);
+        emptyText = findViewById(R.id.empty_text);
     }
 
     @Override
@@ -86,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
                 editPos = -1;
             }
         }
+
+        checkEmpty();
+
     }
 
     protected void onNewIntent(Intent intent) {
@@ -98,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
         MaterialButton button = (MaterialButton)view;
         if (button.getText().toString().equals("START")) {
-            if (notiContainerArrayList.size() == 0) {
+            if (notiContainerArrayList.isEmpty()) {
                 Toast.makeText(MainActivity.this, "설정한 노티피케이션이 없습니다.", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -110,6 +121,16 @@ public class MainActivity extends AppCompatActivity {
             stopService(intent);
 
             button.setText("START");
+        }
+    }
+
+    void checkEmpty() {
+        if (notiContainerArrayList.isEmpty()) {
+            emptyButton.setVisibility(View.VISIBLE);
+            emptyText.setVisibility(View.VISIBLE);
+        } else {
+            emptyButton.setVisibility(View.INVISIBLE);
+            emptyText.setVisibility(View.INVISIBLE);
         }
     }
 }

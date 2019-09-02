@@ -35,7 +35,7 @@
 
     <!--text colors-->
     <color name="text">#4d4d4d</color>
-    <color name="text_unfocused">#4c4d4d4d</color>
+    <color name="text_unfocused">#ad4d4d4d</color>
     <color name="text_white">#ffffff</color>
 
     <!--View Colors-->
