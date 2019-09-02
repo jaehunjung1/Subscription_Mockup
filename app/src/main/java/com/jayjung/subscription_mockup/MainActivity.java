@@ -1,33 +1,25 @@
 package com.jayjung.subscription_mockup;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
+import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.jayjung.subscription_mockup.service.NotificationThreadService;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     boolean beenToEditActivity = false;
     int editPos = -1;
-
-    private NotificationManager notificationManager;
 
     private RecyclerView recyclerView;
     private NotiContainerAdapter notiContainerAdapter;
@@ -38,17 +30,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // User Permission
-        notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-
-        Button b = findViewById(R.id.test_button);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                triggerNotification();
-            }
-        });
 
         // RecyclerView Logic for notification card view
         recyclerView = findViewById(R.id.main_recycler_view);
@@ -62,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         notiContainerAdapter.notifyDataSetChanged();
 
+        // Floating Action Button Logic
         fab = findViewById(R.id.main_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,37 +93,23 @@ public class MainActivity extends AppCompatActivity {
         setIntent(intent);
     }
 
-    public void triggerNotification() {
-        PendingIntent snoozeIntent =
-                PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), 0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                MainActivity.this, generateChannelId())
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground))
-                .setContentTitle("Test Content Title")
-                .setContentText("Test Content Text")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(snoozeIntent)
-                .setAutoCancel(true);
+    public void onStartButtonClick(View view) {
+        Intent intent = new Intent(MainActivity.this, NotificationThreadService.class);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder.setSmallIcon(R.drawable.ic_launcher_foreground);
-            String channelName = "Test Noti Channel";
-            String description = "Channel Description";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        MaterialButton button = (MaterialButton)view;
+        if (button.getText().toString().equals("START")) {
+            if (notiContainerArrayList.size() == 0) {
+                Toast.makeText(MainActivity.this, "설정한 노티피케이션이 없습니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            intent.putParcelableArrayListExtra("containers", notiContainerArrayList);
+            startService(intent);
 
-            NotificationChannel channel = new NotificationChannel(generateChannelId(), channelName, importance);
-            channel.setDescription(description);
-
-            assert notificationManager != null;
-            notificationManager.createNotificationChannel(channel);
+            button.setText("STOP");
         } else {
-            builder.setSmallIcon(R.mipmap.ic_launcher);
+            stopService(intent);
+
+            button.setText("START");
         }
-
-        notificationManager.notify(1234, builder.build());
-    }
-
-    private String generateChannelId() {
-        return "10001";
     }
 }
