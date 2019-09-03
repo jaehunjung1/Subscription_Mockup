@@ -1,17 +1,13 @@
 package com.jayjung.subscription_mockup;
 
-import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class NotiContainer implements Parcelable {
-    public Drawable smallIcon, largeIcon;
     public String contentTitle, contentText;
     public String channelName, channelDesc;
 
     public NotiContainer(String title, String text, String name) {
-//        this.smallIcon = smallI;
-//        this.largeIcon = largeI;
         this.contentTitle = title;
         this.contentText = text;
         this.channelName = name;
@@ -21,7 +17,6 @@ public class NotiContainer implements Parcelable {
         contentTitle = in.readString();
         contentText = in.readString();
         channelName = in.readString();
-//        channelDesc = in.readString();
     }
 
     public static final Creator<NotiContainer> CREATOR = new Creator<NotiContainer>() {
@@ -46,6 +41,5 @@ public class NotiContainer implements Parcelable {
         parcel.writeString(contentTitle);
         parcel.writeString(contentText);
         parcel.writeString(channelName);
-//        parcel.writeString(channelDesc);
     }
 }

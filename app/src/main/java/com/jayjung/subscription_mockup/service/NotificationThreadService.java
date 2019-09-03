@@ -23,7 +23,6 @@ import com.jayjung.subscription_mockup.R;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class NotificationThreadService extends Service {
     ArrayList<NotiContainer> notiContainerArrayList;
@@ -97,6 +96,7 @@ public class NotificationThreadService extends Service {
                         container.channelName,
                         importance);
                 channel.setDescription(container.channelDesc);
+                channel.setGroup(container.channelName);
 
                 manager.createNotificationChannel(channel);
             } else {
@@ -105,15 +105,6 @@ public class NotificationThreadService extends Service {
 
             manager.notify(NotificationID.getID(), builder.build());
         }
-    }
-
-
-}
-
-class NotificationID {
-    private final static AtomicInteger c = new AtomicInteger(0);
-    public static int getID() {
-        return c.incrementAndGet();
     }
 }
 

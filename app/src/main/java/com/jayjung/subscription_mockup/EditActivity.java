@@ -7,12 +7,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
+
+import java.util.ArrayList;
 
 public class EditActivity extends AppCompatActivity {
     private Intent intent;
@@ -23,6 +26,8 @@ public class EditActivity extends AppCompatActivity {
     AutoCompleteTextView channelDropDown;
 
     MaterialButton addButton, cancelButton;
+
+    ArrayAdapter<String> channelDropDownAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +55,12 @@ public class EditActivity extends AppCompatActivity {
 
         channelDropDown = findViewById(R.id.channel_dropdown);
         channelDropDown.setOnFocusChangeListener(focusListener);
-        // TODO change this to real channel
-        String[] channels = new String[] {"Channel 1", "Channel 2", "Test Channel"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+
+        channelDropDownAdapter = new ArrayAdapter<>(
                 this,
                 R.layout.dropdown_menu_item,
-                channels);
-        channelDropDown.setAdapter(adapter);
+                new ArrayList<String>());
+        channelDropDown.setAdapter(channelDropDownAdapter);
 
         addButton = findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -127,16 +131,22 @@ public class EditActivity extends AppCompatActivity {
             titleEditText.setText("");
             textEditText.setText("");
             channelDropDown.setText("");
-            // TODO add channel drop down update here
 
             addButton.setText("ADD");
         } else {
             headline.setText("Edit Notification");
             titleEditText.setText(intent.getStringExtra("title"));
             textEditText.setText(intent.getStringExtra("text"));
-            // TODO add channel drop down update here
+            channelDropDown.setText(intent.getStringExtra("name"));
 
             addButton.setText("DONE");
         }
+
+        channelDropDownAdapter = new ArrayAdapter<>(
+                this,
+                R.layout.dropdown_menu_item,
+                intent.getStringArrayListExtra("channelArray"));
+        channelDropDown.setAdapter(channelDropDownAdapter);
+        channelDropDownAdapter.notifyDataSetChanged();
     }
 }
