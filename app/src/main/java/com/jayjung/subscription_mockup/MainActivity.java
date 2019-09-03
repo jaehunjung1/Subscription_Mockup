@@ -19,7 +19,10 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
         viewPager = findViewById(R.id.main_viewpager);
         initViewPager(viewPager);
 
@@ -50,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
 
     }
 
@@ -92,9 +97,37 @@ public class MainActivity extends AppCompatActivity {
         setIntent(intent);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        Gson gson = new Gson();
+
+        String notificationArrayString = gson.toJson(notificationFragment.notiContainerArrayList);
+        String groupNameArrayString = gson.toJson(groupFragment.groupNameArrayList);
+
+        editor.putString("notificationArrayString", notificationArrayString);
+        editor.putString("groupNameArrayString", groupNameArrayString);
+        editor.apply();
+    }
+
     private void initViewPager(ViewPager viewPager) {
-        notificationFragment = new NotificationFragment();
-        groupFragment = new GroupFragment();
+        Gson gson = new Gson();
+
+
+        String notificationArrayString = sharedPref.getString("notificationArrayString", "");
+        Type notiArrType = new TypeToken<ArrayList<NotiContainer>>() {}.getType();
+        ArrayList<NotiContainer> notificationArray = gson.fromJson(notificationArrayString, notiArrType);
+
+
+        String groupNameArrayString = sharedPref.getString("groupNameArrayString", "");
+        Type groupArrType = new TypeToken<ArrayList<String>>() {}.getType();
+        ArrayList<String> groupNameArray = gson.fromJson(groupNameArrayString, groupArrType);
+
+        notificationFragment = new NotificationFragment(notificationArray);
+        groupFragment = new GroupFragment(groupNameArray);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), 2);
         adapter.addFragment(notificationFragment, "NOTIFICATION");

@@ -42,6 +42,10 @@ public class GroupFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public GroupFragment(ArrayList<String> initGroupNameList) {
+        this.groupNameArrayList = initGroupNameList;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +62,6 @@ public class GroupFragment extends Fragment {
         // RecyclerView Logic for group card view
         recyclerView = layout.findViewById(R.id.main_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        groupNameArrayList = new ArrayList<>();
         groupNameAdapter = new GroupNameAdapter(activity, groupNameArrayList);
         recyclerView.setAdapter(groupNameAdapter);
 

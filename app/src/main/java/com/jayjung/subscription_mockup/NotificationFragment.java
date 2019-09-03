@@ -30,7 +30,7 @@ public class NotificationFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private NotiContainerAdapter notiContainerAdapter;
-    private ArrayList<NotiContainer> notiContainerArrayList;
+    ArrayList<NotiContainer> notiContainerArrayList;
 
     private FloatingActionButton fab;
 
@@ -40,6 +40,10 @@ public class NotificationFragment extends Fragment {
 
     public NotificationFragment() {
         // Required empty public constructor
+    }
+
+    public NotificationFragment(ArrayList<NotiContainer> initNotiContainerList) {
+        this.notiContainerArrayList = initNotiContainerList;
     }
 
 
@@ -60,14 +64,9 @@ public class NotificationFragment extends Fragment {
         // RecyclerView Logic for notification card view
         recyclerView = layout.findViewById(R.id.main_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        notiContainerArrayList = new ArrayList<>();
         notiContainerAdapter = new NotiContainerAdapter(activity, notiContainerArrayList);
         recyclerView.setAdapter(notiContainerAdapter);
 
-        notiContainerArrayList.add(new NotiContainer("LALALA Title", "LALALA HEHEHE", "Social"));
-        notiContainerArrayList.add(new NotiContainer("LALALA Title 2", "LALALA HEHEHE 2", "Ad"));
-
-        notiContainerAdapter.notifyDataSetChanged();
 
         // Floating Action Button Logic
         fab = layout.findViewById(R.id.main_fab);
