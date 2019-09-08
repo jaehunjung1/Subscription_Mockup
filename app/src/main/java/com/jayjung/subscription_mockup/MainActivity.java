@@ -126,8 +126,8 @@ public class MainActivity extends AppCompatActivity {
         Type groupArrType = new TypeToken<ArrayList<String>>() {}.getType();
         ArrayList<String> groupNameArray = gson.fromJson(groupNameArrayString, groupArrType);
 
-        notificationFragment = new NotificationFragment(notificationArray);
-        groupFragment = new GroupFragment(groupNameArray);
+        notificationFragment = new NotificationFragment(notificationArray != null? notificationArray:new ArrayList<NotiContainer>());
+        groupFragment = new GroupFragment(groupNameArray != null? groupNameArray:new ArrayList<String>());
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), 2);
         adapter.addFragment(notificationFragment, "NOTIFICATION");
